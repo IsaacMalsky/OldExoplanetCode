@@ -41,7 +41,7 @@
   max_number_backups = 100
   max_number_retries = 500
 
-  varcontrol_target = 5d-5
+  varcontrol_target = 1d-4
   mesh_delta_coeff = 0.5
 
 	! when to stop

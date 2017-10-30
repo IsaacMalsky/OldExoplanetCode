@@ -31,7 +31,7 @@ def calculate_rho(mp, enFrac, createmod):
 	log_age = loadtxt('LOGS/' + createmod, unpack=True, skiprows =6, usecols=[0])
 	my_type = str(type(planet_mass_list))
 	if (my_type == "<type 'numpy.ndarray'>"):
-		if (max(log_age) > 5.5):
+		if (max(log_age) > 2.5):
 			print log_age, "this should work"
 			planet_mass = planet_mass_list[-1] / mearth
 			planet_radius = planet_radius_list[-1] / rearth

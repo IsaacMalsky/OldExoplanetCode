@@ -38,8 +38,8 @@ cd! inlist_evolve
 
 &controls
 
-      varcontrol_target = 1d-5
-      mesh_delta_coeff = 0.4
+      varcontrol_target = 1d-4
+      mesh_delta_coeff = 0.5
 
 	! interior heating
 	!inject_uniform_extra_heat = 0.0

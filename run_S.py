@@ -38,12 +38,12 @@ BA= 0.1                    #planet Bond albedo
 ####################################################
 #########        PARAMETERS TO VARY        #########
 ####################################################
-mpList=[9]
-enFracList=[.1]
-entropyList=[7,9]
-yList = [.2]
+mpList=[6,7,8,9,10]
+enFracList=[.05,.1,.15]
+entropyList=[7.0,9.0]
+yList = [.15,.25]
 zList = [.02]
-oribitalList=[5]
+oribitalList=[.5,5]
 ####################################################
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
@@ -107,53 +107,56 @@ for w in range (0, len(zList)):
 								relaxirradmod = "planet_relax_irradiate_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
 								evolvemod = "planet_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
 
-								luminosity_list, entropy_list = loadtxt('LOGS/' + reducemod, unpack=True, skiprows =6, usecols=[1,3])
+								if (os.path.isfile('LOGS/' + reducemod) == True):
+									luminosity_list, entropy_list = loadtxt('LOGS/' + reducemod, unpack=True, skiprows =6, usecols=[1,3])
 
-								luminosity = luminosity_list[-1]* 60 * 3.846e33
-								currentropy = entropy_list[-1]
-								irrad_col = 300
+									luminosity = luminosity_list[-1]* 60 * 3.846e33
+									currentropy = entropy_list[-1]
+									irrad_col = 300
 
-								#The cools or heats the planet, removes the core, and then evolves it
-								#chose whether to reduce the entropy by cooling the planet, or increase the entropy by inflating the planet
-								if currentropy<float(targetEntropy):
-									maxage = 1e8
-									which_s = 0
-									knob = ".true." #Turns on the relax_L lines in inlist remove
-									inlist4 = "inlist_heating_"  + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
-									run_time = my.heating(targetEntropy,luminosity,inlist4,reducemod,heatingmod,maxage,currentropy)
+									#The cools or heats the planet, removes the core, and then evolves it
+									#chose whether to reduce the entropy by cooling the planet, or increase the entropy by inflating the planet
+									if currentropy<float(targetEntropy):
+										maxage = 1e8
+										which_s = 0
+										knob = ".true." #Turns on the relax_L lines in inlist remove
+										inlist4 = "inlist_heating_"  + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
+										run_time = my.heating(targetEntropy,luminosity,inlist4,reducemod,heatingmod,maxage,currentropy)
 
-									if do_remove_core: #Duplicated so remove core can get the right mod file
-										maxage = 1e4
-										inlist5 = "inlist_remove_heating_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
-										run_time = my.remove_core_heating(maxage,inlist5,heatingmod,removeheatingmod,knob)
-										which_s = 1
+										if do_remove_core: #Duplicated so remove core can get the right mod file
+											maxage = 1e4
+											inlist5 = "inlist_remove_heating_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
+											run_time = my.remove_core_heating(maxage,inlist5,heatingmod,removeheatingmod,knob)
+											which_s = 1
 
-								#I turned off remove, and changed the program so that relax irrad loads cooling.  Make sure to fix
-								#If one of these fails to converge, the program can accidentally grab the wrong mod file?
+									#I turned off remove, and changed the program so that relax irrad loads cooling.  Make sure to fix
+									#If one of these fails to converge, the program can accidentally grab the wrong mod file?
+									else:
+										maxage= 1e8
+										knob= ".false." #Turns off the relax_L lines in inlist remove
+										inlist6 = "inlist_cooling_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
+										run_time = my.cooling(targetEntropy,luminosity,inlist6,reducemod,coolingmod,maxage, currentropy)
+
+										if do_remove_core: #Duplicated so remove core can get the right mod file
+											maxage = 1e4
+											inlist7 = "inlist_remove_cooling_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
+											run_time = my.remove_core_cooling(maxage,inlist7,coolingmod,removecoolingmod,knob)
+											which_s = -1
+
+
+									maxage_irrad= 1e6
+									initialage = 0
+									if do_relax_irradiation:  
+											inlist8 = "inlist_relax_irradiation_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
+											run_time = my.relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist8,relaxirradmod,orb_sep,Rmp,enFrac,targetEntropy,which_s,y,z,removeheatingmod, removecoolingmod)
+
+
+									knob= ".true."
+									initialage= 3e6   #set 1e8 for planets below 10 Mearth, for better convergence
+									maxage= 2e9
+									if do_evolve_planet:  
+											inlist9 = "inlist_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
+											run_time = my.evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col)
 								else:
-									maxage= 1e8
-									knob= ".false." #Turns off the relax_L lines in inlist remove
-									inlist6 = "inlist_cooling_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
-									run_time = my.cooling(targetEntropy,luminosity,inlist6,reducemod,coolingmod,maxage, currentropy)
-
-									if do_remove_core: #Duplicated so remove core can get the right mod file
-										maxage = 1e4
-										inlist7 = "inlist_remove_cooling_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
-										run_time = my.remove_core_cooling(maxage,inlist7,coolingmod,removecoolingmod,knob)
-										which_s = -1
-
-
-								maxage_irrad= 3e6
-								initialage = 0
-								if do_relax_irradiation:  
-										inlist8 = "inlist_relax_irradiation_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
-										run_time = my.relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist8,relaxirradmod,orb_sep,Rmp,enFrac,targetEntropy,which_s,y,z,removeheatingmod, removecoolingmod)
-
-
-								knob= ".true."
-								initialage= 3e6   #set 1e8 for planets below 10 Mearth, for better convergence
-								maxage= 2e9
-								if do_evolve_planet:  
-										inlist9 = "inlist_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
-										run_time = my.evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col)
+									pass
 f.close()

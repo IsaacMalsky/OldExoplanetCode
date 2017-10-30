@@ -59,7 +59,7 @@
 	!terminal_interval = 10
 
 
-   !star_history_name = "<<historyName>>"
+   star_history_name = <<smwtfname>>
 
    !profile_data_prefix = "<<historyName>>" 
 

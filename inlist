@@ -5,10 +5,10 @@
       show_log_description_at_start = .true.
 
       load_saved_model = .true.
-      saved_model_name = "planet_relax_irradiate_9_0.1_0.2_0.02_5.mod"
+      saved_model_name = "planet_relax_irradiate_9_0.1_9_0.2_0.02_5.mod"
 
       save_model_when_terminate = .true.
-      save_model_filename = "planet_evolve_9_0.1_0.2_0.02_5.mod"
+      save_model_filename = "planet_evolve_9_0.1_9_0.2_0.02_5.mod"
       
       write_profile_when_terminate = .true.
       !filename_for_profile_when_terminate = 'final_profile.data'

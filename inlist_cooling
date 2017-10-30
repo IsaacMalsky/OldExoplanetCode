@@ -31,7 +31,7 @@
 
 &controls
 
-  	varcontrol_target = 1d-4
+  	varcontrol_target = 1d-5
   	mesh_delta_coeff = 0.5
 
 	! when to stop
