@@ -1,0 +1,5 @@
+#!/bin/bash
+./clean
+./clear_inlists
+./mk
+python run_S.py
