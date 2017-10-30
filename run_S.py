@@ -38,12 +38,12 @@ BA= 0.1                    #planet Bond albedo
 ####################################################
 #########        PARAMETERS TO VARY        #########
 ####################################################
-mpList=[1,2,3,4,5,6,7,8,9,10]
-enFracList=[.03,.05,.1,.2,.3,.5]
-entropyList=[7.0,8.5,9.5]
-yList = [.01,.05,.1,.15,.25,.35,.50,.6,.7,.9]
+mpList=[6,7,8,9,10]
+enFracList=[.05,.1]
+entropyList=[7.0,9.0]
+yList = [.2,.25]
 zList = [.02]
-oribitalList=[.1,.3,1,5]
+oribitalList=[5]
 ####################################################
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
