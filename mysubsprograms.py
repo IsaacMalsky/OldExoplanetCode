@@ -96,7 +96,7 @@ def put_core_in_planet(mcore,rhocore,inlist2,createmod,coremod):
 	return run_time
 
 #Relaxes the mass
-def relaxm(Rmp,inlist3,coremod,relaxedmod):
+def reduce(Rmp,inlist3,coremod,reducemod):
         start_time = time.time()
 	print "reducing mass"
 	print "target mass=",str(Rmp)
@@ -104,7 +104,7 @@ def relaxm(Rmp,inlist3,coremod,relaxedmod):
 	g = f.read()
 	f.close()
 	g = g.replace("<<loadfile>>",'"' + coremod + '"')
-	g = g.replace("<<smwtfname>>", '"' + relaxedmod + '"')
+	g = g.replace("<<smwtfname>>", '"' + reducemod + '"')
 	g = g.replace("<<new_mass>>",str(Rmp*mearth/msun))
 	h = open(inlist3, 'w')
 	h.write(g)
@@ -116,15 +116,15 @@ def relaxm(Rmp,inlist3,coremod,relaxedmod):
 	return run_time
 
 #Increases the entropy of the planet
-def heating(targetEntropy,luminosity,inlist4,relaxedmod,Smod,maxage,currentropy):
+def heating(targetEntropy,luminosity,inlist4,reducemod,heatingmod,maxage,currentropy):
         start_time = time.time()
 	print "setting initial entropy"
 	print "target entropy=",str(targetEntropy)
 	f = open('inlist_heating', 'r')
 	g = f.read()
 	f.close()
-	g = g.replace("<<loadfile>>",'"' + relaxedmod + '"')
-	g = g.replace("<<smwtfname>>", '"' + Smod + '"')
+	g = g.replace("<<loadfile>>",'"' + reducemod + '"')
+	g = g.replace("<<smwtfname>>", '"' + heatingmod + '"')
 	g = g.replace("<<maxage>>",str(maxage))
 	g = g.replace("<<Lc>>", str(luminosity))
 	g = g.replace("<<entropy>>",str(targetEntropy))
@@ -140,21 +140,21 @@ def heating(targetEntropy,luminosity,inlist4,relaxedmod,Smod,maxage,currentropy)
 	return run_time
 
 #Decreases the entropy
-def cooling(targetEntropy,luminosity,inlist4,relaxedmod,Smod,maxage,currentropy):
+def cooling(targetEntropy,luminosity,inlist6,reducemod,coolingmod,maxage,currentropy):
         start_time = time.time()
 	print "cooling (nosetS)"
 	print "target entropy=",str(targetEntropy)
 	f = open('inlist_cooling', 'r')
 	g = f.read()
 	f.close()
-	g = g.replace("<<loadfile>>",'"' + relaxedmod + '"')
-	g = g.replace("<<smwtfname>>", '"' + Smod + '"')
+	g = g.replace("<<loadfile>>",'"' + reducemod + '"')
+	g = g.replace("<<smwtfname>>", '"' + coolingmod + '"')
 	g = g.replace("<<maxage>>",str(maxage))
 	g = g.replace("<<entropy>>",str(targetEntropy))
-	h = open(inlist4, 'w')
+	h = open(inlist6, 'w')
 	h.write(g)
 	h.close()
-	shutil.copyfile(inlist4,"inlist")
+	shutil.copyfile(inlist6,"inlist")
 	os.system('./star_make_planets')
         run_time = time.time() - start_time
         print "run time to evolve in sec=",run_time
@@ -164,14 +164,14 @@ def cooling(targetEntropy,luminosity,inlist4,relaxedmod,Smod,maxage,currentropy)
 
 
 #Removes the heating core of the planet
-def remove_core(maxage,inlist5,Smod,removemod,knob):
+def remove_core_heating(maxage,inlist5,heatingmod,removeheatingmod,knob):
         start_time = time.time()
 	print "remove core dissipation"
-	f = open('inlist_remove', 'r')
+	f = open('inlist_remove_heating', 'r')
 	g = f.read()
 	f.close()
-	g = g.replace("<<loadfile>>",'"' + Smod + '"')
-	g = g.replace("<<smwtfname>>", '"' + removemod + '"')
+	g = g.replace("<<loadfile>>",'"' + heatingmod + '"')
+	g = g.replace("<<smwtfname>>", '"' + removeheatingmod + '"')
 	g = g.replace("<<maxage>>",str(maxage))
 	g = g.replace("<<knob>>", str(knob) ) 
 	h = open(inlist5, 'w')
@@ -183,16 +183,41 @@ def remove_core(maxage,inlist5,Smod,removemod,knob):
         print "run time to evolve in sec=",run_time
 	return run_time
 
+#Removes the heating core of the planet
+def remove_core_cooling(maxage,inlist7,coolingmod,removeheatingmod,knob):
+        start_time = time.time()
+	print "remove core dissipation"
+	f = open('inlist_remove_cooling', 'r')
+	g = f.read()
+	f.close()
+	g = g.replace("<<loadfile>>",'"' + coolingmod + '"')
+	g = g.replace("<<smwtfname>>", '"' + removecoolingmod + '"')
+	g = g.replace("<<maxage>>",str(maxage))
+	g = g.replace("<<knob>>", str(knob) ) 
+	h = open(inlist7, 'w')
+	h.write(g)
+	h.close()
+	shutil.copyfile(inlist7,"inlist")
+	os.system('./star_make_planets')
+        run_time = time.time() - start_time
+        print "run time to evolve in sec=",run_time
+	return run_time
+
 
 #Relax irradiation
-def relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist6,relaxirradmod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,removemod):
+def relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist8,relaxirradmod,orb_sep,Rmp,enFrac,targetEntropy,which_s,y,z,removeheatingmod, removecoolingmod):
         start_time = time.time()
         kappa_v=1/float(irrad_col)
 	print "Relax Irradiation"
 	f = open('inlist_relax_irradiation', 'r')
 	g = f.read()
 	f.close()
-	g = g.replace("<<loadfile>>",'"' + removemod + '"')
+	if (which_s == 1):
+		g = g.replace("<<loadfile>>",'"' + removeheatingmod + '"')
+	elif (which_s == -1):
+		g = g.replace("<<loadfile>>",'"' + removecoolingmod + '"')
+	else:
+		pass
 	g = g.replace("<<smwtfname>>", '"' + relaxirradmod + '"')
 	g = g.replace("<<irrad_col>>", str(irrad_col) )
 	g = g.replace("<<flux_dayside>>", str(flux_dayside) )
@@ -201,10 +226,10 @@ def relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist6,relax
 	#g = g.replace("<<pl_param>>", str(random.uniform(0,2)) )
 	g= g.replace("<<orbital_distance>>", str(orb_sep) )
 	#g= g.replace("<<historyName>>", str(Rmp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep))
-	h = open(inlist6, 'w')
+	h = open(inlist8, 'w')
 	h.write(g)
 	h.close()
-	shutil.copyfile(inlist6,"inlist")
+	shutil.copyfile(inlist8,"inlist")
 	os.system('./star_make_planets')
         run_time = time.time() - start_time
         print "run time to relax irradiation in sec=",run_time
@@ -212,7 +237,7 @@ def relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist6,relax
 
 
 #regular mass-loss evolution
-def evolve_planet(Teq,maxage,initialage,inlist7,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col):
+def evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col):
         start_time = time.time()
         kappa_v=1/float(irrad_col)
 	print "evolve planet"
@@ -227,10 +252,10 @@ def evolve_planet(Teq,maxage,initialage,inlist7,relaxirradmod,evolvemod,orb_sep,
 	g = g.replace("<<kappa_v>>", str(kappa_v) ) 
 	g= g.replace("<<orbital_distance>>", str(orb_sep) )
 	g= g.replace("<<historyName>>", str(Rmp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep))
-	h = open(inlist7, 'w')
+	h = open(inlist9, 'w')
 	h.write(g)
 	h.close()
-	shutil.copyfile(inlist7,"inlist")
+	shutil.copyfile(inlist9,"inlist")
 	os.system('./star_make_planets')
         run_time = time.time() - start_time
         print "run time to evolve in sec=",run_time

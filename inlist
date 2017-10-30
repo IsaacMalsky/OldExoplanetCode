@@ -5,7 +5,7 @@
       show_log_description_at_start = .true.
 
       save_model_when_terminate = .true.
-      save_model_filename = "planet_create_30_0.01_0.02.mod"
+      save_model_filename = "planet_create_30_0.2_0.02.mod"
       
       ! new adiabatic, contracting initial model
       create_initial_model = .true.
@@ -30,14 +30,14 @@
 
 	! for create_initial_model
 	initial_Z = 0.02
-	initial_Y = 0.01
+	initial_Y = 0.2
 
   	varcontrol_target = 1d-4
  	mesh_delta_coeff = 0.5
 
 	! when to stop
 	max_age = 1.d6
-    max_model_number = 1000         ! don't let it go on and on if run stuck
+  max_model_number = 2500         ! don't let it go on and on if run stuck
 
 	T_mix_limit = 0
 
@@ -49,7 +49,7 @@
 	!terminal_cnt = 10
 	!write_header_frequency = 10
 
-    star_history_name = "planet_create_30_0.01_0.02.mod"
+    star_history_name = "planet_create_30_0.2_0.02.mod"
 
 /
 &pgstar

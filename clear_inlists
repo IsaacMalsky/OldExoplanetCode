@@ -5,7 +5,10 @@ rm inlist_core_*
 rm inlist_reducem_*
 rm inlist_heating_*
 rm inlist_cooling_*
-rm inlist_remove_*
-rm inlist_relax_irradiation_*
-rm inlist_evolve_*
+rm inlist_remove_heating_*
+rm inlist_remove_cooling_*
+rm inlist_relax_irradiation_cooling_*
+rm inlist_relax_irradiation_heating_*
+rm inlist_evolve_heating_*
+rm inlist_evolve_cooling_*
 rm planet_*
