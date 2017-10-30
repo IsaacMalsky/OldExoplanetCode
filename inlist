@@ -1,56 +1,101 @@
-! inlist_create
+
 
 &star_job
 
       show_log_description_at_start = .true.
 
-      save_model_when_terminate = .true.
-      save_model_filename = "planet_create_30_0.2_0.02.mod"
-      
-      ! new adiabatic, contracting initial model
-      create_initial_model = .true.
-      
-      radius_in_cm_for_create_initial_model = 1.9933e10   !3 Rjup in cm
-      mass_in_gm_for_create_initial_model = 1.791e+29 !30 Mearth in grams
+      load_saved_model = .true.
+      saved_model_name = "planet_relax_irradiate_9_0.1_0.2_0.02_5.mod"
 
-      initial_model_relax_num_steps = 0
+      save_model_when_terminate = .true.
+      save_model_filename = "planet_evolve_9_0.1_0.2_0.02_5.mod"
+      
+      write_profile_when_terminate = .true.
+      !filename_for_profile_when_terminate = 'final_profile.data'
+      
+      set_initial_model_number = .true.
+      initial_model_number = 0       
 
       set_initial_age = .true.
-      initial_age = 0.0 ! in years
+      initial_age = 3000000.0
+
+      steps_to_take_before_terminate = 1800  ! don't let it go on and on if run stuck
+      !Sets max_model_number = model_number + steps_to_take_before_terminate.
 
       eos_file_prefix = 'mesa'
       kappa_file_prefix = 'gs98'
       kappa_lowT_prefix = 'lowT_Freedman11'
-
+      
       change_lnPgas_flag = .true.
       new_lnPgas_flag = .true.
-/ !end of star_job
+
+      pgstar_flag = .false.
+      !pause_before_terminate = .true. ! lets you examine the final pgstar window when run terminates
+
+/ ! end of star_job namelist
+
+
 
 &controls
 
-	! for create_initial_model
-	initial_Z = 0.02
-	initial_Y = 0.2
+  max_number_backups = 100
+  max_number_retries = 500
 
-  	varcontrol_target = 1d-4
- 	mesh_delta_coeff = 0.5
+  varcontrol_target = 5d-5
+  mesh_delta_coeff = 0.5
 
 	! when to stop
-	max_age = 1.d6
-  max_model_number = 2500         ! don't let it go on and on if run stuck
-
-	T_mix_limit = 0
-
+	max_age = 2000000000.0 
+	max_model_number = 2500 ! don't let it go on and on if run stuck
+  Teff_lower_limit = 10
+  T_mix_limit = 0
+  logQ_limit=20000000000
+      
 	! output to files and terminal
-	!photostep = 50
-	!profile_interval = 100
-	!max_num_profile_models=1000
-	!history_interval = 2
+	photo_interval  = 20000
+	profile_interval = 2000
+	max_num_profile_models=2
+	history_interval = 1
 	!terminal_cnt = 10
-	!write_header_frequency = 10
+	write_header_frequency = 10
 
-    star_history_name = "planet_create_30_0.2_0.02.mod"
+  !x_ctrls for Malsky Mass Loss subroutine
+  x_ctrl(50)= 1.0 !frac_absorbed_euv
+  x_ctrl(51)= 1.0 !frac_absorbing_radius
+  x_ctrl(52)= 1.0 !host_star_mass (this gets multiplied by msol)
+  x_ctrl(53)= 1.0 !escape_rate_reduction_factor
+  x_ctrl(54)= 5 !orbital_distance (this gets multipled by au)
+  x_ctrl(55)= 1d9 ! eddy coefficient
+  x_ctrl(56)= 10d-5 !Homopause pressure in Pascals
+  x_ctrl(57)= 4.0
 
-/
+  which_atm_option = 'grey_irradiated'
+
+
+        which_atm_option = 'grey_irradiated'
+        atm_grey_irradiated_atol = 1d-4
+        atm_grey_irradiated_rtol = 1d-4
+        atm_grey_irradiated_T_eq = 118.681173356! K equilibrium temperature based on irradiation
+         ! e.g., neglecting albedo, can use T_eq = Teff_star*(R_star/(2*Distance_to_star))^(1/2) 
+         ! T_eq**4 = irrad_flux/(4*sigma)
+        atm_grey_irradiated_kap_v = 4d-3 ! opacity for irradiation
+        atm_grey_irradiated_P_surf = 1d6 ! 1 bar in cgs units
+        atm_grey_irradiated_max_tries = 50 ! limit on iterations
+        trace_atm_grey_irradiated = .false.
+
+  !profile_data_suffix = '.data'
+
+  use_other_adjust_mdot = .false.
+
+  use_other_energy = .true.
+  x_ctrl(3) = 1d10 ! core heat capacity  eps=erg/g/K
+  x_ctrl(4) = 1.0 ! fraction of core mass in "chondrite-like" rocky material
+
+  star_history_name = "9_0.1_9_0.2_0.02_5"
+
+  !profile_data_prefix = "9_0.1_9_0.2_0.02_5" 
+
+/ ! end of controls namelist
+
 &pgstar
 / ! end of pgstar namelist

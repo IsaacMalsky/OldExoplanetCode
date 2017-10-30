@@ -104,8 +104,8 @@ for w in range (0, len(zList)):
 								coolingmod= "planet_cooling_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
 								removecoolingmod = "planet_remove_cooling_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
 								removeheatingmod = "planet_remove_heating_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
-								relaxirradmod = "planet_relax_irradiate_" + str(mp) + "_" + str(enFrac)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
-								evolvemod = "planet_evolve_"+ str(mp) + "_" + str(enFrac)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep) + ".mod"
+								relaxirradmod = "planet_relax_irradiate_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
+								evolvemod = "planet_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)+ ".mod"
 
 								luminosity_list, entropy_list = loadtxt('LOGS/' + reducemod, unpack=True, skiprows =6, usecols=[1,3])
 

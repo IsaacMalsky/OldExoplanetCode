@@ -184,7 +184,7 @@ def remove_core_heating(maxage,inlist5,heatingmod,removeheatingmod,knob):
 	return run_time
 
 #Removes the heating core of the planet
-def remove_core_cooling(maxage,inlist7,coolingmod,removeheatingmod,knob):
+def remove_core_cooling(maxage,inlist7,coolingmod,removecoolingmod,knob):
         start_time = time.time()
 	print "remove core dissipation"
 	f = open('inlist_remove_cooling', 'r')
