@@ -38,12 +38,12 @@ BA= 0.1                    #planet Bond albedo
 ####################################################
 #########        PARAMETERS TO VARY        #########
 ####################################################
-mpList=[6,7,8,9,10]
-enFracList=[.05,.1,.15]
-entropyList=[7.0,9.0]
-yList = [.15,.25]
+mpList=[2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,7.5,8.0,8.5,9.0,9.5,10.0]
+enFracList=[.01,.05,.10,.15,.20,.3,.40]
+entropyList=[8.0]
+yList = [.05,.08,.10,.15,.20,.25,.30,.35,.50,.8,.95]
 zList = [.02]
-oribitalList=[.5,5]
+oribitalList=[.3,.5,1.0,5.0]
 ####################################################
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
@@ -153,7 +153,7 @@ for w in range (0, len(zList)):
 
 									knob= ".true."
 									initialage= 3e6   #set 1e8 for planets below 10 Mearth, for better convergence
-									maxage= 2e9
+									maxage= 1e10
 									if do_evolve_planet:  
 											inlist9 = "inlist_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
 											run_time = my.evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col)
