@@ -25,10 +25,10 @@ au = 1.496e13
 
 
 #Calculate the density of the planet
-def calculate_rho(mp, enFrac, createmod):
-	planet_mass_list, planet_radius_list = loadtxt('LOGS/' + createmod, unpack=True, skiprows =6, usecols=[6,4])
+def calculate_rho(mp, enFrac, comp_mod):
+	planet_mass_list, planet_radius_list = loadtxt('LOGS/' + comp_mod, unpack=True, skiprows =6, usecols=[6,4])
 	observed_Mcore, observed_Rcore = loadtxt('coreMRcomp2_v40_all.txt', unpack=True, skiprows =11, usecols=[0,1])
-	log_age = loadtxt('LOGS/' + createmod, unpack=True, skiprows =6, usecols=[0])
+	log_age = loadtxt('LOGS/' + comp_mod, unpack=True, skiprows =6, usecols=[0])
 	my_type = str(type(planet_mass_list))
 	if (my_type == "<type 'numpy.ndarray'>"):
 		if (max(log_age) > 2.5):
@@ -74,14 +74,35 @@ def create_planet(minitial,y,z,inlist1,createmod):
 	print "run time for create_planets in sec=",run_time
   	return run_time
 
+
+
+def relax_comp(y,z,inlistcomp,createmod,comp_mod):
+        start_time = time.time()
+	print "Relax Dude"
+	f = open('inlist_comp', 'r')
+	g = f.read()
+	f.close()
+	g = g.replace("<<loadfile>>",'"' + createmod + '"')
+	g = g.replace("<<smwtfname>>", '"' + comp_mod + '"')
+	g = g.replace("<<y>>",str(y))
+	h = open(inlistcomp, 'w')
+	h.write(g)
+	h.close()
+	shutil.copyfile(inlistcomp,"inlist")
+	os.system('./star_make_planets')
+        run_time = time.time() - start_time
+	return run_time
+
+
+
 # put in the core if me > 0.0
-def put_core_in_planet(mcore,rhocore,inlist2,createmod,coremod):
+def put_core_in_planet(mcore,rhocore,inlist2,comp_mod,coremod):
         start_time = time.time()
 	print "put core in planet"
 	f = open('inlist_core', 'r')
 	g = f.read()
 	f.close()
-	g = g.replace("<<loadfile>>",'"' + createmod + '"')
+	g = g.replace("<<loadfile>>",'"' + comp_mod + '"')
 	g = g.replace("<<smwtfname>>", '"' + coremod + '"')
 	g = g.replace("<<new_core_mass>>",str(mcore*mearth/msun))
 	g = g.replace("<<core_avg_rho>>",str(rhocore))

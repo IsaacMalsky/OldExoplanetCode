@@ -1,0 +1,75 @@
+
+
+&star_job
+
+      show_log_description_at_start = .false.
+
+      load_saved_model = .true.
+      saved_model_name = "planet_cooling_8_0.05_8.0_0.19_0.02_1.mod"
+
+      save_model_when_terminate = .true.
+      save_model_filename = "planet_remove_cooling_8_0.05_8.0_0.19_0.02_1.mod"
+      
+
+      set_initial_model_number = .true.
+      initial_model_number = 0
+
+      write_profile_when_terminate = .true.
+      filename_for_profile_when_terminate = 'final_profile.data'
+      
+      ! add energy dissipation from the core
+      relax_L_center = .false.
+      new_L_center = 0  ! ergs/sec
+      dlgL_per_step = 1d-3   !too high causes convergence issues
+      relax_L_center_dt = 3.1558149984d1 ! secyer*1d-6
+
+      set_initial_age = .true.
+      initial_age = 0
+
+      eos_file_prefix = 'mesa'
+      kappa_file_prefix = 'gs98'
+      kappa_lowT_prefix = 'lowT_Freedman11'
+
+      
+      change_lnPgas_flag = .true.
+      new_lnPgas_flag = .true.
+
+      !pgstar_flag = .true.
+
+
+/ ! end of star_job namelist
+
+
+
+&controls
+
+	! interior heating
+	!inject_uniform_extra_heat = 0.0
+
+	! when to stop
+	max_age = 10000.0
+	max_model_number = 2500	! don't let it go on and on if run stuck
+  !max_retries = 500
+	!Teff_lower_limit = 10
+  !      logQ_limit=20000000000
+
+	! knobs
+	!use_lnE_for_eps_grav = .false.
+	!T_mix_limit = 0
+
+	! output to files and terminal
+	!photostep = 50
+	!profile_interval = 100
+	!max_num_profile_models=1000
+	!history_interval = 1
+  !terminal_cnt = 10
+	!write_header_frequency = 10
+
+  star_history_name = "planet_remove_cooling_8_0.05_8.0_0.19_0.02_1.mod"
+
+/ ! end of controls namelist
+
+
+&pgstar
+
+/ ! end of pgstar namelist

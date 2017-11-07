@@ -22,6 +22,7 @@ au = 1.496e13
 
 # flags to skip steps
 do_create_planet = True
+do_relax_composition = True
 do_put_in_core = True
 do_set_entropy=  True	
 do_relaxm =  True
@@ -29,7 +30,8 @@ do_remove_core =  True
 do_relax_irradiation = True
 do_evolve_planet = True
 
-minitial=30                                 #initial planet mass in creation phase
+minitial=30
+yinitial = .24
 ms = 1.0				# star mass in msun
 rs = 1				# star radius in rsun
 Teff_star = 5800			# stellar Teff  
@@ -38,12 +40,12 @@ BA= 0.1                    #planet Bond albedo
 ####################################################
 #########        PARAMETERS TO VARY        #########
 ####################################################
-mpList=[2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,7.5,8.0,8.5,9.0,9.5,10.0]
-enFracList=[.01,.05,.10,.15,.20,.3,.40]
+mpList=[8]
+enFracList=[.05]
 entropyList=[8.0]
-yList = [.05,.08,.10,.15,.20,.25,.30,.35,.50,.8,.95]
+yList = [.19]
 zList = [.02]
-oribitalList=[.3,.5,1.0,5.0]
+oribitalList=[1]
 ####################################################
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
@@ -54,12 +56,16 @@ for w in range (0, len(zList)):
 	for i in range (0 ,len(yList)):
 		y = yList[i]
 
-		#Create the initial planet. Reuse the model as mp, enFraction, and entropy changes but not z or y fraction
-		#createmodel = "planet_create_" + str(minitial) + "_" + str(y) + "_" + str(z) + "_MJ"  + ".mod"
-		createmod = "planet_create_" + str(minitial) + "_" +  str(y) + "_" + str(z)+ ".mod"
+		createmod = "planet_create_" + str(minitial) + "_" +  str(yinitial) + "_" + str(z)+ ".mod"
 		if do_create_planet:
-			inlist1 = "inlist_create_" + str(minitial) + "_" +  str(y) + "_" + str(z)
-			run_time = my.create_planet(minitial,y,z,inlist1,createmod)
+			inlist1 = "inlist_create_" + str(minitial) + "_" +  str(yinitial) + "_" + str(z)
+			run_time = my.create_planet(minitial,yinitial,z,inlist1,createmod)
+
+		comp_mod = "planet_relax_composition" + str(minitial) + "_" +  str(y) + "_" + str(z)+ ".mod"
+		if do_relax_composition:
+			inlistcomp = "inlist_comp_" + str(minitial) + "_" +  str(y) + "_" + str(z)
+			run_time = my.relax_comp(y,z,inlistcomp,createmod,comp_mod)
+
 
 		    #Iterate over envelope fractions and masses
 			for j in range(0, len(enFracList)):
@@ -69,7 +75,7 @@ for w in range (0, len(zList)):
 					Rmp = mp
 					mcore = mp*(1-enFrac)
 
-					rhocore = my.calculate_rho(mp, enFrac, createmod)
+					rhocore = my.calculate_rho(mp, enFrac, comp_mod)
 
 					if (rhocore == -1):
 						pass
@@ -82,7 +88,7 @@ for w in range (0, len(zList)):
 
 						if do_put_in_core:
 							inlist2 = "inlist_core_" + str(mp) + "_" + str(enFrac)+ "_" + str(y)+ "_" + str(z)
-							run_time = my.put_core_in_planet(mcore,rhocore,inlist2,createmod,coremod)
+							run_time = my.put_core_in_planet(mcore,rhocore,inlist2,comp_mod,coremod)
 
 						if do_relaxm:
 							inlist3 = "inlist_reduce_" + str(mp) + "_" + str(enFrac)+ "_" + str(y) + "_" + str(z)
