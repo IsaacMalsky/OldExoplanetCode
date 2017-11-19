@@ -34,18 +34,18 @@ minitial=30
 yinitial = .24
 ms = 1.0				# star mass in msun
 rs = 1				# star radius in rsun
-Teff_star = 5800			# stellar Teff  
-BA= 0.1                    #planet Bond albedo
+Teff_star = 6000			# stellar Teff  
+BA= 0.15                   #planet Bond albedo
 
 ####################################################
 #########        PARAMETERS TO VARY        #########
 ####################################################
-mpList=[8]
-enFracList=[.05]
+mpList=[5]
+enFracList=[.1]
 entropyList=[8.0]
-yList = [.19]
+yList = [.20]
 zList = [.02]
-oribitalList=[1]
+oribitalList=[.5]
 ####################################################
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
@@ -67,7 +67,7 @@ for w in range (0, len(zList)):
 			run_time = my.relax_comp(y,z,inlistcomp,createmod,comp_mod)
 
 
-		    #Iterate over envelope fractions and masses
+			#Iterate over envelope fractions and masses
 			for j in range(0, len(enFracList)):
 				for m in range(0, len(mpList)):
 					mp = mpList[m]

@@ -52,9 +52,9 @@
   logQ_limit=20000000000
       
 	! output to files and terminal
-	photo_interval  = 20000
-	profile_interval = 2000
-	max_num_profile_models=2
+	photo_interval  = 3
+	profile_interval = 3
+	max_num_profile_models=400
 	history_interval = 1
 	!terminal_cnt = 10
 	write_header_frequency = 10
@@ -83,9 +83,9 @@
         atm_grey_irradiated_max_tries = 50 ! limit on iterations
         trace_atm_grey_irradiated = .false.
 
-  !profile_data_suffix = '.data'
+  profile_data_suffix = '.data'
 
-  use_other_adjust_mdot = .false.
+  use_other_adjust_mdot = .true.
 
   use_other_energy = .true.
   x_ctrl(3) = 1d10 ! core heat capacity  eps=erg/g/K
@@ -93,9 +93,6 @@
 
   star_history_name = "<<historyName>>"
 
-  !profile_data_prefix = "<<historyName>>" 
-
 / ! end of controls namelist
-
 &pgstar
 / ! end of pgstar namelist

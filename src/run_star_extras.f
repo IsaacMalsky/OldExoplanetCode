@@ -189,18 +189,22 @@
     !!!!!!------This is the mass loss I eventually want to impliment, but right now its not working---!!!!!!
     !********************************************************************************************************
         IF (escape_el.LT.escape_dl*h1_number_frac*atomic_mass_h1*4*pi*(homopause_radius**2)) THEN
-        !IF (1.LT.2) THEN
-
             escape_h1 = escape_el
             escape_he4 = 0
 
             s% mstar_dot = -escape_h1
 
-            frac_change_h1 = escape_h1 * s% dt / (s% star_mass_h1*msun)
-            frac_change_he4 =  escape_he4* s% dt/ (s% star_mass_he4*msun)
+            frac_change_h1 = (escape_h1 * s% dt / (s% star_mass_h1*msun)) * s% xa(1,1)
+            frac_change_he4 =  (escape_he4* s% dt/ (s% star_mass_he4*msun)) * s% xa(3,1)
             total_frac_change = frac_change_h1 + frac_change_he4
 
+
+            write(*,*) frac_change_h1, frac_change_he4, he4_number_frac, h1_number_frac
+
             frac_other_isotopes = s% xa(2,1) + s% xa(4,1) +s% xa(5,1) +s% xa(6,1) +s% xa(7,1) +s% xa(8,1)
+
+            IF (frac_change_he4 < frac_change_h1) THEN
+            END IF
 
             do i = 1, s% nz
                 s% xa(1,i) = s% xa(1,i) - frac_change_h1
@@ -224,27 +228,24 @@
             *h1_number_frac*he4_number_frac*4*pi*(homopause_radius**2)))&
             /(atomic_mass_h1*h1_number_frac + atomic_mass_he4*he4_number_frac)
 
-            escape_he4 = ((escape_el*atomic_mass_h1*h1_number_frac) - (escape_dl*atomic_mass_h1*atomic_mass_he4&
+            escape_he4 = ((escape_el*atomic_mass_he4*he4_number_frac) - (escape_dl*atomic_mass_h1*atomic_mass_he4&
             *h1_number_frac*he4_number_frac*4*pi*(homopause_radius**2)))&
             /(atomic_mass_h1*h1_number_frac + atomic_mass_he4*he4_number_frac)
 
-            total_loss = escape_he4 + escape_h1
 
+            frac_change_h1 = (escape_h1 * s% dt / (s% star_mass_h1*msun)) * s% xa(1,1)
+            frac_change_he4 =  (escape_he4* s% dt/ (s% star_mass_he4*msun)) * s% xa(3,1)
+
+
+            total_loss = escape_he4 + escape_h1
             s% mstar_dot = - total_loss
 
-
-            IF ((s% star_mass_he4*msun).GT.(10**20)) THEN
-                frac_change_h1 = (escape_h1 * s% dt) / (s% star_mass_h1*msun)
-                frac_change_he4 =  (escape_he4 * s% dt) / (s% star_mass_he4*msun)
-            ELSE
-                frac_change_h1 = (escape_h1 * s% dt) / (s% star_mass_h1*msun)
-                frac_change_he4 =  0
-            END IF
-
-
-            total_frac_change = frac_change_h1 + frac_change_he4
             frac_other_isotopes = s% xa(2,1) + s% xa(4,1) +s% xa(5,1) +s% xa(6,1) +s% xa(7,1) +s% xa(8,1)
 
+            write(*,*) frac_change_h1, frac_change_he4, he4_number_frac, h1_number_frac
+
+            IF (frac_change_he4 < frac_change_h1) THEN
+            END IF
             do i = 1, s% nz
                 s% xa(1,i) = s% xa(1,i) - frac_change_h1
                 s% xa(3,i) = s% xa(3,i) - frac_change_he4
