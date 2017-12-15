@@ -34,18 +34,18 @@ minitial=30
 yinitial = .24
 ms = 1.0				# star mass in msun
 rs = 1				# star radius in rsun
-Teff_star = 6000			# stellar Teff  
-BA= 0.15                   #planet Bond albedo
+Teff_star = 5800			# stellar Teff  
+BA= 0.1                    #planet Bond albedo
 
 ####################################################
 #########        PARAMETERS TO VARY        #########
 ####################################################
-mpList=[5]
-enFracList=[.1]
+mpList=[10]
+enFracList=[.05]
 entropyList=[8.0]
-yList = [.20]
+yList = [.22,.23]
 zList = [.02]
-oribitalList=[.5]
+oribitalList=[1]
 ####################################################
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
@@ -67,7 +67,7 @@ for w in range (0, len(zList)):
 			run_time = my.relax_comp(y,z,inlistcomp,createmod,comp_mod)
 
 
-			#Iterate over envelope fractions and masses
+		    #Iterate over envelope fractions and masses
 			for j in range(0, len(enFracList)):
 				for m in range(0, len(mpList)):
 					mp = mpList[m]
@@ -78,7 +78,7 @@ for w in range (0, len(zList)):
 					rhocore = my.calculate_rho(mp, enFrac, comp_mod)
 
 					if (rhocore == -1):
-						pass
+						print (mp, enFrac)
 					else:
 						my.print_parameters(Rmp,enFrac,rhocore,mcore,y,z)
 
@@ -159,10 +159,8 @@ for w in range (0, len(zList)):
 
 									knob= ".true."
 									initialage= 3e6   #set 1e8 for planets below 10 Mearth, for better convergence
-									maxage= 1e10
+									maxage= 2e9
 									if do_evolve_planet:  
 											inlist9 = "inlist_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
 											run_time = my.evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col)
-								else:
-									pass
 f.close()

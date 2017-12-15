@@ -124,6 +124,7 @@
 		 - LOG(binary_temp_constant / eddy_coeff)) / ((10**(s% log_surface_gravity)) * molar_mass)
 
 		write(*,*) 'binary diff', binary_temp_constant
+        write(*,*) 'Dont Kill meeeeeeeeeeeee'
         write(*,*) 'ln surface press', s% xh (s% i_lnPgas,1)
 		write(*,*) 'temp',  (10 ** s% log_surface_temperature)
 		write(*,*) 'gravity', (10 ** s% log_surface_gravity)
