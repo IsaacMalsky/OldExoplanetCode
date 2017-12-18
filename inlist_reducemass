@@ -42,6 +42,8 @@
 &controls
   varcontrol_target = 1d-4
  	mesh_delta_coeff = 0.5
+  max_number_backups = 100
+  max_number_retries = 100
 
 
 	! when to stop

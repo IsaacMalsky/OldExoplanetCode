@@ -1,40 +1,37 @@
 
 
 &star_job
+  show_log_description_at_start = .true.
 
-      show_log_description_at_start = .true.
+  load_saved_model = .true.
+  saved_model_name = <<loadfile>>
 
-      load_saved_model = .true.
-      saved_model_name = <<loadfile>>
+  save_model_when_terminate = .true.
+  save_model_filename = <<smwtfname>>
+  
+  write_profile_when_terminate = .true.
+  !filename_for_profile_when_terminate = 'final_profile.data'
+  
+  set_initial_model_number = .true.
+  initial_model_number = 0       
 
-      save_model_when_terminate = .true.
-      save_model_filename = <<smwtfname>>
-      
-      write_profile_when_terminate = .true.
-      !filename_for_profile_when_terminate = 'final_profile.data'
-      
-      set_initial_model_number = .true.
-      initial_model_number = 0       
+  set_initial_age = .true.
+  initial_age = <<initial_age>>
 
-      set_initial_age = .true.
-      initial_age = <<initial_age>>
+  steps_to_take_before_terminate = 1800  ! don't let it go on and on if run stuck
+  !Sets max_model_number = model_number + steps_to_take_before_terminate.
 
-      steps_to_take_before_terminate = 1800  ! don't let it go on and on if run stuck
-      !Sets max_model_number = model_number + steps_to_take_before_terminate.
+  eos_file_prefix = 'mesa'
+  kappa_file_prefix = 'gs98'
+  kappa_lowT_prefix = 'lowT_Freedman11'
+  
+  change_lnPgas_flag = .true.
+  new_lnPgas_flag = .true.
 
-      eos_file_prefix = 'mesa'
-      kappa_file_prefix = 'gs98'
-      kappa_lowT_prefix = 'lowT_Freedman11'
-      
-      change_lnPgas_flag = .true.
-      new_lnPgas_flag = .true.
-
-      pgstar_flag = .false.
-      !pause_before_terminate = .true. ! lets you examine the final pgstar window when run terminates
+  pgstar_flag = .false.
+  !pause_before_terminate = .true. ! lets you examine the final pgstar window when run terminates
 
 / ! end of star_job namelist
-
-
 
 &controls
 
@@ -43,6 +40,14 @@
 
   varcontrol_target = 1d-4
   mesh_delta_coeff = 0.5
+
+  delta_lgL_limit_L_min = -1000
+  delta_lgL_limit = 0.1d1
+  delta_lgL_hard_limit = -1000
+
+  delta_lgL_phot_limit_L_min = -1000
+  delta_lgL_phot_limit = 0.1d1
+  delta_lgL_phot_hard_limit = -1000
 
 	! when to stop
 	max_age = <<maxage>> 
@@ -59,34 +64,24 @@
 	!terminal_cnt = 10
 	write_header_frequency = 10
 
-  !x_ctrls for Malsky Mass Loss subroutine
-  x_ctrl(50)= 1.0 !frac_absorbed_euv
-  x_ctrl(51)= 1.0 !frac_absorbing_radius
-  x_ctrl(52)= 1.0 !host_star_mass (this gets multiplied by msol)
-  x_ctrl(53)= 1.0 !escape_rate_reduction_factor
-  x_ctrl(54)= <<orbital_distance>> !orbital_distance (this gets multipled by au)
-  x_ctrl(55)= 1d9 ! eddy coefficient
-  x_ctrl(56)= 10d-5 !Homopause pressure in Pascals
-  x_ctrl(57)= 4.0
+  x_ctrl(50)= <<n_frac>>                  !frac_absorbed_euv (η)
+  x_ctrl(51)= <<a>>                       !frac_absorbing_radius (a)
+  x_ctrl(52)= <<ms>>                      !host_star_mass (this gets multiplied by msol)
+  x_ctrl(53)= <<rf>>                      !escape_rate_reduction_factor
+  x_ctrl(54)= <<orbital_distance>>        !orbital_distance (this gets multipled by au)
+  x_ctrl(55)= <<ec>>                      !eddy coefficient
 
   which_atm_option = 'grey_irradiated'
-
-
-        which_atm_option = 'grey_irradiated'
-        atm_grey_irradiated_atol = 1d-4
-        atm_grey_irradiated_rtol = 1d-4
-        atm_grey_irradiated_T_eq = <<Teq>>! K equilibrium temperature based on irradiation
-         ! e.g., neglecting albedo, can use T_eq = Teff_star*(R_star/(2*Distance_to_star))^(1/2) 
-         ! T_eq**4 = irrad_flux/(4*sigma)
-        atm_grey_irradiated_kap_v = 4d-3 ! opacity for irradiation
-        atm_grey_irradiated_P_surf = 1d6 ! 1 bar in cgs units
-        atm_grey_irradiated_max_tries = 50 ! limit on iterations
-        trace_atm_grey_irradiated = .false.
-
+  atm_grey_irradiated_atol = 1d-4
+  atm_grey_irradiated_rtol = 1d-4
+  atm_grey_irradiated_T_eq = <<Teq>>      !K equilibrium temperature based on irradiation
+  atm_grey_irradiated_kap_v = 4d-3        !opacity for irradiation
+  atm_grey_irradiated_P_surf = 1d6        !1 bar in cgs units
+  atm_grey_irradiated_max_tries = 100     !limit on iterations
+  trace_atm_grey_irradiated = .false.
   profile_data_suffix = '.data'
 
   use_other_adjust_mdot = .true.
-
   use_other_energy = .true.
   x_ctrl(3) = 1d10 ! core heat capacity  eps=erg/g/K
   x_ctrl(4) = 1.0 ! fraction of core mass in "chondrite-like" rocky material

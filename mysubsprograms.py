@@ -261,7 +261,8 @@ def relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist8,relax
 	return run_time
 
 #regular mass-loss evolution
-def evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col):
+def evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,
+				orb_sep,Rmp,enFrac,targetEntropy,knob,y,z,irrad_col,n_frac, a, ms, rf, ec):
 	start_time = time.time()
 	kappa_v=1/float(irrad_col)
 	print ("evolve planet")
@@ -273,8 +274,16 @@ def evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,orb_sep,
 	g = g.replace("<<maxage>>",str(maxage))
 	g = g.replace("<<initial_age>>",str(initialage))
 	g = g.replace("<<Teq>>", str(Teq) ) 
-	g = g.replace("<<kappa_v>>", str(kappa_v) ) 
-	g= g.replace("<<orbital_distance>>", str(orb_sep) )
+	g = g.replace("<<kappa_v>>", str(kappa_v)) 
+
+	#x_controls
+	g = g.replace("<<n_frac>>", str(n_frac))
+	g = g.replace("<<a>>", str(a)) 
+	g = g.replace("<<ms>>", str(ms)) 
+	g = g.replace("<<rf>>", str(rf))
+	g = g.replace("<<orbital_distance>>", str(orb_sep))
+	g = g.replace("<<ec>>", str(ec))
+
 	g= g.replace("<<historyName>>", str(Rmp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep))
 	h = open(inlist9, 'w')
 	h.write(g)
