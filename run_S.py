@@ -20,29 +20,28 @@ au = 1.496e13
 ####################################################
 #########         PARAMETERS LISTS         #########
 ####################################################
-mpList=[22.5]
-enFracList=[.05]
+mpList=[22.2]
+enFracList=[.04]
 entropyList=[8.0]
-yList = [.24]
+yList = [.18,.24,.30]
 zList = [.02]
-oribitalList=[.288]
-
+oribitalList=[.05,.06,.07,.08,.09,.10,.15,.25,.50,1.0]
 
 ####################################################
 #########        IRRAD/EVOL CONDITIONS        ######
 ####################################################
-minitial=30						#Initial Planet Mass
+minitial=50						#Initial Planet Mass
 yinitial = .24							#Initial He4				
 rs = .464				        #star radius in rsun
 Teff_star = 3318			           #stellar Teff  
-BA= 0.3                          #planet Bond albedo
+BA= 0.2                          #planet Bond albedo
 irrad_col = 300					  #irradiation depth
 
 n_frac = .1 					  #frac_absorbed_euv
-a = 1    				      #frac_absorbing_radius
+a = .8    				      #frac_absorbing_radius
 ms = .452                            #host_star_mass
-rf = 1.                #escape_rate_reduction_factor
-ec = 1e9                           #eddy coefficient
+rf = .8                #escape_rate_reduction_factor
+ec = 1e6                           #eddy coefficient
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
 f=open('logfile','w')
@@ -137,7 +136,7 @@ for w in range (0, len(zList)):
 								run_time = my.relax_irradiate_planet(Teq,irrad_col,flux_dayside,maxage_irrad,inlist8,relaxirradmod,orb_sep,Rmp,enFrac,targetEntropy,which_s,y,z,removeheatingmod, removecoolingmod)
 
 								knob= ".true."
-								initialage= 1e6   #set 1e8 for planets below 10 Mearth, for better convergence
+								initialage= 5e6   #set 1e8 for planets below 10 Mearth, for better convergence
 								maxage= 1e10
 								inlist9 = "inlist_evolve_" + str(mp) + "_" + str(enFrac)+ "_" +str(targetEntropy)+ "_" + str(y) + "_" + str(z) + "_" + str(orb_sep)
 								run_time = my.evolve_planet(Teq,maxage,initialage,inlist9,relaxirradmod,evolvemod,
