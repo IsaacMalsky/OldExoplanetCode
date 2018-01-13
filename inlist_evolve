@@ -81,7 +81,7 @@
   trace_atm_grey_irradiated = .false.
   profile_data_suffix = '.data'
 
-  use_other_adjust_mdot = .true.
+  use_other_adjust_mdot = .false.
   use_other_energy = .true.
   x_ctrl(3) = 1d10 ! core heat capacity  eps=erg/g/K
   x_ctrl(4) = 1.0 ! fraction of core mass in "chondrite-like" rocky material

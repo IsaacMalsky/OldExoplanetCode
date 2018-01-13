@@ -20,17 +20,17 @@ au = 1.496e13
 ####################################################
 #########         PARAMETERS LISTS         #########
 ####################################################
-mpList=[22.2]
-enFracList=[.04]
-entropyList=[8.0]
-yList = [.18,.24,.30]
+mpList=[10]
+enFracList=[.05]
+entropyList=[8.0,10.0]
+yList = [.24]
 zList = [.02]
-oribitalList=[.05,.06,.07,.08,.09,.10,.15,.25,.50,1.0]
+oribitalList=[.5]
 
 ####################################################
 #########        IRRAD/EVOL CONDITIONS        ######
 ####################################################
-minitial=50						#Initial Planet Mass
+minitial=30						#Initial Planet Mass
 yinitial = .24							#Initial He4				
 rs = .464				        #star radius in rsun
 Teff_star = 3318			           #stellar Teff  
@@ -38,10 +38,10 @@ BA= 0.2                          #planet Bond albedo
 irrad_col = 300					  #irradiation depth
 
 n_frac = .1 					  #frac_absorbed_euv
-a = .8    				      #frac_absorbing_radius
+a = 1.    				      #frac_absorbing_radius
 ms = .452                            #host_star_mass
-rf = .8                #escape_rate_reduction_factor
-ec = 1e6                           #eddy coefficient
+rf = 1.                #escape_rate_reduction_factor
+ec = 1e9                           #eddy coefficient
 
 #All mod files and log files are saved under the name "string_mp_enFrac_entropy_y_z_orbitalseparation"
 f=open('logfile','w')
